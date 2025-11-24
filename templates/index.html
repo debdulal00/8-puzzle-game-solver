@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>8-Puzzle Solver Web</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            margin: 40px; 
+            background: #f4f4f4;
+        }
+        .container {
+            max-width: 420px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        button {
+            padding: 10px;
+            width: 48%;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>🧩 8-Puzzle Game Solver</h2>
+
+    <label>Enter puzzle (9 numbers with spaces):</label>
+    <input id="puzzle" style="width:100%; padding:8px;" placeholder="1 2 3 4 0 6 7 5 8">
+
+    <br><br>
+
+    <button onclick="solve('astar')">Solve A*</button>
+    <button onclick="solve('bfs')">Solve BFS</button>
+
+    <div id="output"></div>
+</div>
+
+<script>
+function solve(algo) {
+    const puzzle = document.getElementById("puzzle").value;
+
+    fetch("/solve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ puzzle, algo })
+    })
+    .then(res => res.json())
+    .then(data => {
+        let out = document.getElementById("output");
+        out.style.display = "block";
+
+        if (data.error) {
+            out.innerHTML = "❌ " + data.error;
+            return;
+        }
+
+        if (!data.solvable) {
+            out.innerHTML = "❌ Puzzle is UNSOLVABLE.";
+            return;
+        }
+
+        out.innerHTML = `
+            ✅ <b>Solved in ${data.steps} moves</b><br><br>
+            Moves: ${data.moves.join(", ")}
+        `;
+    });
+}
+</script>
+
+</body>
+</html>
