@@ -60,7 +60,7 @@ Step 1: move 5 (RIGHT)
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/8-puzzle-game-solver
+git clone https://github.com/debdulal00/8-puzzle-game-solver
 cd 8-puzzle-game-solver
 
 
